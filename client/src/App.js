@@ -58,37 +58,21 @@ class TestEntry extends React.Component {
     constructor(props) {
         super(props);
 
-        fetch("http://localhost:3001/api/v1/version",{
-            headers:{
-                "accepts":"application/json"
-            }
-        })
-        .then(res => {
-            console.log(res);
-            return res.json();
-        })
-        .then(json => console.log(json) )
-        .catch( a => { console.log(a) });
-        /*
-        fetch('localhost:3001/api/v1/version', {
+        fetch("api/v1/version")
+        .then((response) => response.text())
+        .then((responseText) => console.log(responseText))
+        .catch((error) => console.error(error));
+
+
+        fetch('/api/v1/test', {
             method: 'POST',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: "Hello from client"
-        }).then(res => res.json())
-        .then(
-          (result) => {
-            console.log(result)
-          },
-          // Note: it's important to handle errors here
-          // instead of a catch() block so that we don't swallow
-          // exceptions from actual bugs in components.
-          (error) => {
-            console.error(error)
-          }
-        )*/
+                'Content-Type': 'application/json'
+              },
+            body: JSON.stringify({"text":"Hello from client"})})
+        .then((response) => response.text())
+        .then((responseText) => console.log(responseText))
+        .catch((error) => console.error(error));
 
         this.state = {
             submittedDate: null,
@@ -113,9 +97,6 @@ class TestEntry extends React.Component {
             (result) => {
             console.log(result);
             },
-            // Note: it's important to handle errors here
-            // instead of a catch() block so that we don't swallow
-            // exceptions from actual bugs in components.
             (error) => {
             console.error(error);
             }
