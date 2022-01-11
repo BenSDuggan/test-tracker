@@ -35,24 +35,6 @@ class App extends React.Component {
     }
 }
 
-function SendTest() {
-    
-    useEffect(() => {
-        fetch("localhost:3001/api/v1/test")
-          .then(res => res.json())
-          .then(
-            (result) => {
-              console.log(result)
-            },
-            // Note: it's important to handle errors here
-            // instead of a catch() block so that we don't swallow
-            // exceptions from actual bugs in components.
-            (error) => {
-              console.error(error)
-            }
-          )
-      }, [])
-}
 
 class TestEntry extends React.Component {
     constructor(props) {
@@ -63,18 +45,14 @@ class TestEntry extends React.Component {
         .then((responseText) => console.log(responseText))
         .catch((error) => console.error(error));
 
-
-        fetch('/api/v1/test', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-              },
-            body: JSON.stringify({"text":"Hello from client"})})
-        .then((response) => response.text())
+        fetch("api/v1/tests")
+        .then((response) => response.json())
         .then((responseText) => console.log(responseText))
         .catch((error) => console.error(error));
 
         this.state = {
+            id:uuidv4(),
+            tid: Date.now(),
             submittedDate: null,
             uid: -1,
             testName: null,
@@ -88,20 +66,6 @@ class TestEntry extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-
-    /*
-    componentDidMount() {
-        fetch("http://localhost:3080/api/users")
-        .then(res => res.json())
-        .then(
-            (result) => {
-            console.log(result);
-            },
-            (error) => {
-            console.error(error);
-            }
-        )
-    }*/
 
     handleInputChange(event) {
         const target = event.target;
@@ -117,9 +81,18 @@ class TestEntry extends React.Component {
         event.preventDefault();
         this.setState({submittedDate:new Date().toISOString()}, 
             () => {
-                console.log(this.state)
+                console.log(this.state);
+
+                fetch('/api/v1/test', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                      },
+                    body: JSON.stringify(this.state)})
+                .then((response) => response.text())
+                .then((responseText) => console.log(responseText))
+                .catch((error) => console.error(error));
             });
-        
     }
 
     render() {
