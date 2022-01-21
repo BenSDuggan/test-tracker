@@ -4,10 +4,11 @@
  */
 
 const fs = require('fs');
+const config = require('./config.js');
 
 class TestsDataBase {
-    constructor(file) {
-        this.databasePath = file
+    constructor() {
+        this.databasePath = config.db.path;
     }
 
     // Getters

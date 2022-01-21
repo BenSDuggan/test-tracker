@@ -6,10 +6,9 @@
 const { fail } = require('assert');
 const fs = require('fs');
 
+const config = require('../config.js');
 const {TestsDataBase} = require('../database.js');
 
-
-const databaseTestPath = "../testDB.json"
 
 function testValues() {
   return Object.assign({}, 
@@ -20,7 +19,7 @@ function testValues() {
 
 describe("Tests Database", () => {
   afterAll( () => {
-    fs.unlink(databaseTestPath, (err) => {
+    fs.unlink(config.db.path, (err) => {
       if (err) {console.error(err);}
     });
   });
@@ -28,10 +27,10 @@ describe("Tests Database", () => {
   describe( "Read", () => {
 
     it( "Read empty", () => {
-      fs.writeFileSync(databaseTestPath, JSON.stringify({}), (err) => {
+      fs.writeFileSync(config.db.path, JSON.stringify({}), (err) => {
         if (err) { fail('Got error: ' + err); }});
 
-        let db = new TestsDataBase(databaseTestPath);
+        let db = new TestsDataBase(config.db.path);
 
         return db.getTests().then(
           (resolve) => { expect(resolve).toStrictEqual({}); },
@@ -39,10 +38,10 @@ describe("Tests Database", () => {
     });
     
     it( "Read 2 tests", () => {
-      fs.writeFileSync(databaseTestPath, JSON.stringify(testValues()), (err) => {
+      fs.writeFileSync(config.db.path, JSON.stringify(testValues()), (err) => {
         if (err) { fail('Got error: ' + err); }});
 
-        let db = new TestsDataBase(databaseTestPath);
+        let db = new TestsDataBase(config.db.path);
 
         return db.getTests().then(
           (resolve) => {
@@ -51,10 +50,10 @@ describe("Tests Database", () => {
     });
 
     it( "Read with tid", () => {
-      fs.writeFileSync(databaseTestPath, JSON.stringify(testValues()), (err) => {
+      fs.writeFileSync(config.db.path, JSON.stringify(testValues()), (err) => {
         if (err) { fail('Got error: ' + error) }});
 
-        let db = new TestsDataBase(databaseTestPath);
+        let db = new TestsDataBase(config.db.path);
 
         return db.getTest("1642692001829").then(
           (resolve) => {
@@ -71,10 +70,10 @@ describe("Tests Database", () => {
     let testValueUpdate = {"id":"e9526a64-2f3f-49fa-ba0e-375f8ae6d121","tid":1642697006706,"submittedDate":"2022-01-20T20:16:56.577Z","uid":-1,"testName":"5","testDate":"2022-01-19","testNumQs":"30","testScore":"60","testAvgScore":"61","testTime":"40"};
 
     beforeEach(() => {
-      fs.writeFileSync(databaseTestPath, JSON.stringify(Object.assign({}, testValues())), (err) => {
+      fs.writeFileSync(config.db.path, JSON.stringify(Object.assign({}, testValues())), (err) => {
         if (err) { console.error(err); }});
       
-      db = new TestsDataBase(databaseTestPath);
+      db = new TestsDataBase(config.db.path);
     });
 
     it( "Create new test", () => {
@@ -109,10 +108,10 @@ describe("Tests Database", () => {
       let tests = Object.assign({}, testValues());
       tests[testValueDelete["tid"]] = testValueDelete;
 
-      fs.writeFileSync(databaseTestPath, JSON.stringify(tests), (err) => {
+      fs.writeFileSync(config.db.path, JSON.stringify(tests), (err) => {
         if (err) { console.error(err); }});
       
-      db = new TestsDataBase(databaseTestPath);
+      db = new TestsDataBase(config.db.path);
     });
 
     

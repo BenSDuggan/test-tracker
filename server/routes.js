@@ -3,20 +3,19 @@
  * 2022-01-20
  */
 
-const version = "v0.1.1"
-
 const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const bodyParser = require("body-parser");
+const { builtinModules } = require('module');
 
+const config = require('./config.js');
 const {TestsDataBase} = require('./database.js');
 
-const databasePath = '../tests.json'
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || config.port;
 
-const testDB = new TestsDataBase(databasePath);
+const testDB = new TestsDataBase();
 
 
 /***   API/Routing   ***/
@@ -30,7 +29,7 @@ app.get('/', (req, res) => {
 
 /*** Get ***/
 app.get('/api/v1/version', (req, res) => {
-    res.status(200).json({version:version});
+    res.status(200).json({version:config.version});
 });
 
 app.get('/api/v1/tests', (req, res) => {
@@ -74,20 +73,22 @@ app.post('/api/v1/tests/:tid', (req, res) => {
 
 
 /***  Delete  ***/
+/*
 app.delete('/api/v1/test', (req, res) => {
     console.log(req.body);
 
-    res.status(501).send("Got message");
+    //res.status(501).send("Got message");
 });
+*/
 
 
-  
 server.listen(port, () => {
     console.log('listening on ' + port);
 });
 
 
-
+module.exports.app = app;
+module.exports.server = server;
 
 
 
