@@ -55,7 +55,7 @@ class TestEntry extends React.Component {
             tid: Date.now(),
             submittedDate: null,
             uid: -1,
-            testName: null,
+            testName: "",
             testDate: new Date(new Date().getTime() - (new Date().getTimezoneOffset()*60*1000)).toISOString().split('T')[0],
             testNumQs: 10,
             testScore: 0,
@@ -97,30 +97,30 @@ class TestEntry extends React.Component {
 
     render() {
         return (
-        <div class="test-entry">
+        <div className="test-entry">
             <h2>New Test</h2>
             <form onSubmit={this.handleSubmit}>
-                <div class="form-element">
+                <div className="form-element">
                     <label>Test name: </label>
                     <input type="text" name="testName" value={this.state.testName} onChange={this.handleInputChange}/>
                 </div>
-                <div class="form-element">
+                <div className="form-element">
                     <label>*Date: </label>
-                    <input type="date" name="testDate" value={this.state.testDate} onChange={this.handleInputChange} require />
+                    <input type="date" name="testDate" value={this.state.testDate} onChange={this.handleInputChange} require="true" />
                 </div>
-                <div class="form-element">
+                <div className="form-element">
                     <label>*Number of questions: </label>
-                    <input type="number" name="testNumQs" value={this.state.testNumQs} onChange={this.handleInputChange} require />
+                    <input type="number" name="testNumQs" value={this.state.testNumQs} onChange={this.handleInputChange} require="true" />
                 </div>
-                <div class="form-element">
+                <div className="form-element">
                     <label>*Your score (%): </label>
                     <input type="number" placeholder="Percent correct" name="testScore" value={this.state.testScore} onChange={this.handleInputChange} required />
                 </div>
-                <div class="form-element">
+                <div className="form-element">
                     <label>*Average score (%): </label>
                     <input type="number" placeholder="Percent correct" name="testAvgScore" value={this.state.testAvgScore} onChange={this.handleInputChange} required />
                 </div>
-                <div class="form-element">
+                <div className="form-element">
                     <label>Your time (minutes): </label>
                     <input type="number" name="testTime" value={this.state.testTime} onChange={this.handleInputChange} />
                 </div>
@@ -129,19 +129,19 @@ class TestEntry extends React.Component {
 
                 <br />
                 <hr />
-                <div class="form-element">
+                <div className="form-element">
                     <label>Service: </label>
                     <input type="text"></input>
                 </div>
-                <div class="form-element">
+                <div className="form-element">
                     <label>Average time (minutes): </label>
                     <input type="number"></input>
                 </div>
-                <div class="form-element">
+                <div className="form-element">
                     <label>Subject: </label>
                     <input type="text"></input>
                 </div>
-                <div class="form-element">
+                <div className="form-element">
                     <label>System: </label>
                     <input type="text"></input>
                 </div>
