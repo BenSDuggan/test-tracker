@@ -89,7 +89,6 @@ describe("Tests Database", () => {
 
           return db.saveTest(testValueSave)
             .then(save => db.getTests())
-            //.then(newDB => { expect(true).toStrictEqual(false); })})
             .then(newDB => { expect(newDB).toStrictEqual(originalDB); })})
         .catch(err => fail('Got error: ' + err))
     });
@@ -151,3 +150,4 @@ describe("Tests Database", () => {
   });
 })
 
+//.then(newDB => { expect(true).toStrictEqual(false); })})

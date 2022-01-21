@@ -22,9 +22,9 @@ db.getTests().then(
 
 
 // Create test
-/*
+
 db.saveTest({tid:"abc", score:5})
     .then(save => db.getTests())
     .then(tests => console.log(tests))
     .catch(e => console.error(e))
-*/
+        

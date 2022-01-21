@@ -54,6 +54,23 @@ class TestsDataBase {
         * Returns: a JSON object with the created status `{"created":true}` if the test was successfully saved and false otherwise
         */
 
+        return this.getTests()
+                    .then(tests => {
+                        return new Promise((resolve, reject) => {
+                            let created = true;
+                            if(tests.hasOwnProperty(data.tid)) { created = false };
+                            tests[data.tid] = data;
+                    
+                            fs.writeFile(this.databasePath, JSON.stringify(tests), (err) => {
+                            
+                                if (err) reject(err);
+                    
+                                resolve(created);
+                            });
+                        })
+                    })
+
+        /*
         return new Promise((resolve, reject) => {
             this.getTests()
                 .then(tests => { 
@@ -75,6 +92,7 @@ class TestsDataBase {
                     });
                 })
                 .catch(err => reject(err) )})
+        */
     }
 
     deleteTest(tid) {
