@@ -8,7 +8,7 @@ const { createDiffieHellman } = require('crypto');
 const fs = require('fs');
 const { kill } = require('process');
 
-const {sum, TestsDataBase} = require('../database.js');
+const {TestsDataBase} = require('../database.js');
 
 
 const databaseTestPath = "../testDB.json"
@@ -19,9 +19,6 @@ function testValues() {
 }
 
 
-test('adds 1 + 2 to equal 3', () => {
-  expect(sum(1, 2)).toBe(3);
-});
 
 describe("Tests Database", () => {
   afterAll( () => {
@@ -93,23 +90,16 @@ describe("Tests Database", () => {
         .catch(err => fail('Got error: ' + err))
     });
     
-    it.skip( "Update test", () => {
-      let shouldBe = db.getTests();
-      shouldBe[testValueUpdate["tid"]] = testValueUpdate;
+    it( "Update test", () => {
+      return db.getTests()
+        .then(originalDB => {
+          originalDB[testValueUpdate["tid"]] = testValueUpdate;
 
-      return db.saveTest(testValueSave).then(
-        (resolve) => {
-          return db.saveTest(testValueUpdate).then(
-            (resolve) => {
-              expect(db.getTests()).toStrictEqual(shouldBe);
-            },
-            (err) => {
-                fail('Got error: ' + err);
-            });
-        },
-        (err) => {
-            fail('Got error: ' + err);
-        });
+          return db.saveTest(testValueSave)
+            .then(save => db.saveTest(testValueUpdate))
+            .then(save => db.getTests())
+            .then(newDB => { expect(newDB).toStrictEqual(originalDB); })})
+        .catch(err => fail('Got error: ' + err))
     });
   });
 

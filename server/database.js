@@ -69,30 +69,6 @@ class TestsDataBase {
                             });
                         })
                     })
-
-        /*
-        return new Promise((resolve, reject) => {
-            this.getTests()
-                .then(tests => { 
-                    let created = true;
-                    if(tests.hasOwnProperty(data.tid)) { created = false };
-                    tests[data.tid] = data;
-                    
-                    fs.writeFile(this.databasePath, JSON.stringify(tests), (err) => {
-                    
-                        if (err) {
-                            console.error(err);
-                            reject(err);
-                        }
-            
-                        if(created) console.log('Created: ' + data.tid);
-                        else console.log('Updated: ' + data.tid);
-            
-                        resolve(created);
-                    });
-                })
-                .catch(err => reject(err) )})
-        */
     }
 
     deleteTest(tid) {
@@ -122,10 +98,5 @@ class TestsDataBase {
 
 
 
-function sum(a, b) {
-    return a + b;
-}
-
 module.exports.TestsDataBase = TestsDataBase;
-module.exports.sum = sum;
 
