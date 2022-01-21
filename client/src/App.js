@@ -83,7 +83,7 @@ class TestEntry extends React.Component {
             () => {
                 console.log(this.state);
 
-                fetch('/api/v1/test', {
+                fetch('/api/v1/tests/'+this.state.tid, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

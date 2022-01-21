@@ -24,3 +24,4 @@ yarn-error.log*
 
 # Mine
 testsdb.json
+hidden/

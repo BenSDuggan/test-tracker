@@ -2,116 +2,20 @@
  * Server index
  */
 
-const fs = require('fs');
 const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const bodyParser = require("body-parser");
 
-const databasePath = '../testsdb.json'
+const {sum, TestsDataBase} = require('./database.js');
+
+const databasePath = '../tests.json'
 const port = process.env.PORT || 3001;
 
+const version = "v0.1.0"
 
-/***   Database   ***/
-let tests = {};
-
-function loadTests() {
-    /*
-     * Load the tests into the variable
-     * 
-     * Returns: null
-     */
-
-    let rawdata = fs.readFileSync(databasePath);
-    tests = JSON.parse(rawdata);
-}
-
-// TODO
-function saveTests() {
-    /*
-     * Save the tests into the variable
-     * 
-     * Returns: true if successful, false otherwise
-     */
-
-    return false
-}
-
-loadTests();
-
-
-// Getters
-function getTest(tid) {
-    /*
-     * Get a specific test marked by the `tid`
-     * 
-     * Returns: JSON object with tests
-     */
-
-    return tests[tid]
-}
-
-function getTests() {
-    /*
-     * Get all the tests
-     * 
-     * Returns: JSON object with tests
-     */
-
-    return tests
-}
-
-// Setters
-function saveTest(data) {
-    /*
-     * Create or update a test. `data` must contain `tid` the test ID.
-     * 
-     * Returns: true if the test was successfully saved and false otherwise
-     */
-
-    console.log('Saving');
-    updated = false;
-    if(tests.hasOwnProperty(data.tid)) updated = true;
-
-    tests[data.tid] = data;
-
-    fs.writeFile(databasePath, JSON.stringify(tests), (err) => {
-        if (err) {
-            console.error(err);
-
-            //TODO: Handel updated tests if write fails
-        }
-
-        if(updated) console.log('Updated: ' + data.tid);
-        else console.log('Created: ' + data.tid);
-
-        return true
-    });
-
-    return false
-}
-
-// Delete
-function deleteTest(tid) {
-    /*
-     * Delete a specific test marked by the `tid`
-     * 
-     * Returns: true if the test was successfully deleted
-     */
-
-    delete tests[tid];
-
-    fs.writeFile(databasePath, JSON.stringify(tests), (err) => {
-        if (err) {
-            console.error(err);
-        }
-
-        return true
-    });
-
-    return false
-}
+const testDB = new TestsDataBase(databasePath);
 
 
 /***   API/Routing   ***/
@@ -125,32 +29,44 @@ app.get('/', (req, res) => {
 
 /*** Get ***/
 app.get('/api/v1/version', (req, res) => {
-    res.send("v0.1.0");
-});
-
-app.get('/api/v1/test', (req, res) => {
-    res.send("TODO");
+    res.status(200).json({version:version});
 });
 
 app.get('/api/v1/tests', (req, res) => {
-    res.json(getTests());
+    res.status(200).json(testDB.getTests());
+});
+
+app.get('/api/v1/tests/:tid', (req, res) => {
+    res.status(501);
 });
 
 /*** Post  ***/
-app.post('/api/v1/test', (req, res) => {
+app.post('/api/v1/tests/:tid', (req, res) => {
     console.log(req.body);
-    saveTest(req.body);
 
-    res.send("Got message");
+    if(req.params.tid != req.body.tid) {
+        res.status(400).json({error:"URL tid must match parameter tid"})
+
+        return;
+    }
+
+    testDB.saveTest(req.body).then(
+        (resolve) => {
+            res.status(resolve?201:200).json({message:resolve?"Created":"Updated"});
+        },
+        (err) => {
+            console.log(err);
+            res.status(500).json({error:"Could not save test in database"});
+        }
+    )
 });
 
 
 /***  Delete  ***/
 app.delete('/api/v1/test', (req, res) => {
     console.log(req.body);
-    saveTest(req.body);
 
-    res.send("Got message");
+    res.status(501).send("Got message");
 });
 
 
