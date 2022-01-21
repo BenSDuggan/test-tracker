@@ -1,12 +1,10 @@
 /*
  * Test Database module
- * 2022-01-19
+ * 2022-01-20
  */
 
 const { fail } = require('assert');
-const { createDiffieHellman } = require('crypto');
 const fs = require('fs');
-const { kill } = require('process');
 
 const {TestsDataBase} = require('../database.js');
 
@@ -103,7 +101,7 @@ describe("Tests Database", () => {
     });
   });
 
-  describe.skip( "Delete", () => {
+  describe( "Delete", () => {
     let db = null;
     let testValueDelete = {"id":"e9526a64-2f3f-49fa-ba0e-375f8ae6d121","tid":1642697006706,"submittedDate":"2022-01-20T16:44:18.879Z","uid":-1,"testName":"5","testDate":"2022-01-18","testNumQs":"40","testScore":"67.5","testAvgScore":"63","testTime":"55"};
 
@@ -119,25 +117,16 @@ describe("Tests Database", () => {
 
     
     it( "Delete test: check DB", () => {
-      return db.deleteTest(testValueDelete["tid"]).then(
-        (resolve) => {
-          expect(db.getTests()).toStrictEqual(testValues());
-        },
-        (err) => {
-            fail('Got error: ' + err);
-        });
+      return db.deleteTest(testValueDelete["tid"])
+                .then(del => db.getTests())
+                .then(tests => expect(tests).toStrictEqual(testValues()))
+                .catch(err =>  fail('Got error: ' + err));
     });
 
     it( "Delete test: check return", () => {
-      return db.deleteTest(testValueDelete["tid"]).then(
-        (resolve) => {
-          expect(resolve).toStrictEqual(testValueDelete);
-        },
-        (err) => {
-            fail('Got error: ' + err);
-        });
-      });
+      return db.deleteTest(testValueDelete["tid"])
+               .then(del => expect(del).toStrictEqual(testValueDelete))
+               .catch(err => fail('Got error: ' + err));
+    });
   });
 })
-
-//.then(newDB => { expect(true).toStrictEqual(false); })})

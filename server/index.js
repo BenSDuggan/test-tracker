@@ -13,7 +13,7 @@ const {sum, TestsDataBase} = require('./database.js');
 const databasePath = '../tests.json'
 const port = process.env.PORT || 3001;
 
-const version = "v0.1.0"
+const version = "v0.1.1"
 
 const testDB = new TestsDataBase(databasePath);
 

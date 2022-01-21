@@ -78,20 +78,19 @@ class TestsDataBase {
         * Returns: A promise with the test that was deleted.
         */
 
-        let tests = this.getTests();
-        let test = tests[tid];
-        delete tests[tid];
+        return this.getTests()
+                   .then(tests => {
+                        let test = tests[tid];
+                        delete tests[tid];
 
-        return new Promise((resolve, reject) => {
-            fs.writeFile(this.databasePath, JSON.stringify(tests), (err) => {
-            
-                if (err) {
-                    console.error(err);
-                    reject(err);
-                }
-    
-                resolve(test);
-            });
+                        return new Promise((resolve, reject) => {
+                        fs.writeFile(this.databasePath, JSON.stringify(tests), (err) => {
+                        
+                            if (err) reject(err)
+                
+                            resolve(test);
+                        });
+                   })
         })
     }
 }
