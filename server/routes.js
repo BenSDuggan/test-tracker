@@ -1,6 +1,6 @@
 /*
  * API routes
- * 2022-01-20
+ * 2022-01-22
  */
 
 const express = require('express');
@@ -73,13 +73,19 @@ app.post('/api/v1/tests/:tid', (req, res) => {
 
 
 /***  Delete  ***/
-/*
-app.delete('/api/v1/test', (req, res) => {
-    console.log(req.body);
 
-    //res.status(501).send("Got message");
+app.delete('/api/v1/tests/:tid', (req, res) => {
+    testDB.deleteTest(req.params.tid).then(
+        (resolve) => {
+            res.status(200).json({data:resolve});
+        },
+        (err) => {
+            console.log(err);
+            res.status(500).json({error:"Could not save test in database"});
+        }
+    )
 });
-*/
+
 
 
 server.listen(port, () => {

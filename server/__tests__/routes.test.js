@@ -1,6 +1,6 @@
 /*
  * Test routes module
- * 2022-01-21
+ * 2022-01-22
  */
 
 const { fail } = require('assert');
@@ -60,5 +60,74 @@ describe("Tests routes", () => {
         expect(response.statusCode).toBe(200);
     });
     
+  });
+
+  describe( "Save", () => {
+    let db = null;
+    let testValueSave = {"id":"e9526a64-2f3f-49fa-ba0e-375f8ae6d121","tid":1642697006706,"submittedDate":"2022-01-20T16:44:18.879Z","uid":-1,"testName":"5","testDate":"2022-01-18","testNumQs":"40","testScore":"67.5","testAvgScore":"63","testTime":"55"};
+    let testValueUpdate = {"id":"e9526a64-2f3f-49fa-ba0e-375f8ae6d121","tid":1642697006706,"submittedDate":"2022-01-20T20:16:56.577Z","uid":-1,"testName":"5","testDate":"2022-01-19","testNumQs":"30","testScore":"60","testAvgScore":"61","testTime":"40"};
+
+    beforeAll(() => {
+      fs.writeFileSync(config.db.path, JSON.stringify(Object.assign({}, testValues())), (err) => {
+        if (err) { console.error(err); }});
+        
+        db = new TestsDataBase();
+    });
+
+    it( "Save: Create new test", async () => {
+        const response = await request(app)
+            .post("/api/v1/tests/1642697006706")
+            .send(testValueSave);
+        expect(response.body).toEqual({message:"Created"});
+        expect(response.statusCode).toBe(201);
+
+        let expectDB = testValues();
+        expectDB["1642697006706"] = testValueSave;
+        return db.getTests()
+            .then(tests => {expect(tests).toStrictEqual(expectDB)})
+            .catch(err => fail('Got error: ' + err))
+    });
+    
+    it( "Save: Update test", async () => {
+        const response = await request(app)
+            .post("/api/v1/tests/1642697006706")
+            .send(testValueUpdate);
+        expect(response.body).toEqual({message:"Updated"});
+        expect(response.statusCode).toBe(200);
+
+        let expectDB = testValues();
+        expectDB["1642697006706"] = testValueUpdate;
+        return db.getTests()
+            .then(tests => {expect(tests).toStrictEqual(expectDB)})
+            .catch(err => fail('Got error: ' + err))
+    });
+  });
+
+  describe( "Delete", () => {
+    let db = null;
+    let testValueDelete = {"id":"e9526a64-2f3f-49fa-ba0e-375f8ae6d121","tid":1642697006706,"submittedDate":"2022-01-20T16:44:18.879Z","uid":-1,"testName":"5","testDate":"2022-01-18","testNumQs":"40","testScore":"67.5","testAvgScore":"63","testTime":"55"};
+
+    beforeEach(() => {
+      let tests = testValues();
+      tests[testValueDelete["tid"]] = testValueDelete;
+
+      fs.writeFileSync(config.db.path, JSON.stringify(tests), (err) => {
+        if (err) { console.error(err); }});
+    
+        db = new TestsDataBase();
+    });
+
+    
+    it( "Delete test: check DB", async () => {
+        const response = await request(app)
+            .delete("/api/v1/tests/1642697006706")
+        expect(response.body).toEqual({data:testValueDelete});
+        expect(response.statusCode).toBe(200);
+
+        let expectDB = testValues();
+        return db.getTests()
+            .then(tests => {expect(tests).toStrictEqual(expectDB)})
+            .catch(err => fail('Got error: ' + err))
+    });
   });
 })
