@@ -8,7 +8,6 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const bodyParser = require("body-parser");
-const { builtinModules } = require('module');
 
 const config = require('./config.js');
 const {TestsDataBase} = require('./database.js');
