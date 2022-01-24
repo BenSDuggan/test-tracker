@@ -3,7 +3,10 @@
  * 2022-01-22
  */
 
-const env = process.env.NODE_ENV; // 'dev' or 'test'
+let env = process.env.NODE_ENV; // 'dev' or 'test'
+if(!env) {
+    env = "dev";
+}
 
 const VERSION = "v0.1.3";
 

@@ -12,6 +12,7 @@ const bodyParser = require("body-parser");
 const config = require('./config.js');
 const {TestsDataBase} = require('./database.js');
 
+console.log(config)
 const port = process.env.PORT || config.port;
 
 const testDB = new TestsDataBase();
