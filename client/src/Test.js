@@ -7,11 +7,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { v4 as uuidv4 } from 'uuid';
 import React, {useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
+import { useForm } from "react-hook-form";
 const ENDPOINT = "http://127.0.0.1:3001";
 
 
 const Test = () => {
-    const defaultTest = {
+    fetch("/api/v1/version")
+    .then((response) => response.text())
+    .then((responseText) => console.log(responseText))
+    .catch((error) => console.error(error));
+
+    let test = {
         id:uuidv4(),
         tid: Date.now(),
         submittedDate: null,
@@ -24,117 +30,108 @@ const Test = () => {
         testTime: 0,
     }
 
-    const [state, setState] = useState({test:defaultTest});
+    const [state, setState] = useState({hi:"fail", test:test});
+
     let params = useParams();
 
-    //let params = {tid:1642692001829};
+    useEffect(() => {
+        if(params.tid == "new") {
 
-    fetch("/api/v1/version")
-    .then((response) => response.text())
-    .then((responseText) => console.log(responseText))
-    .catch((error) => console.error(error));
-    
+        }
+        else {
+            fetch("/api/v1/tests/"+params.tid)
+            .then((response) => response.json())
+            .then((responseJSON) => setState({test:responseJSON}))
+            .catch((error) => console.error(error));
+        }
+    }, [])
 
-    /*
-    if(params.tid) {
-        fetch("/api/v1/tests/"+params.tid)
-        .then((response) => response.json())
-        .then((responseJSON) => setState(responseJSON))
+    return (
+    <div className="test-entry">
+        <h2>New Test</h2>
+        <TestForm data={state.test}/>
+    </div>
+    )
+}
+
+const TestForm = (test) => {
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+    const formElements = {"testName":null, "testDate":null, "testNumQs":null, "testScore":null, "testAvgScore":null, "testTime":null}
+
+    if(test && test.data) {
+        for(let k in formElements) {
+            setValue(k, test.data[k]);
+        }
+    }
+
+    const sub = (data) => {
+        fetch('/api/v1/tests/'+test.tid, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+              },
+            body: JSON.stringify(test)})
+        .then((response) => response.text())
+        .then((responseText) => console.log(responseText))
         .catch((error) => console.error(error));
-    }
-    */
+    };
 
-    const handleInputChange = (event) => {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
+    return (
+    <form onSubmit={handleSubmit(sub)}>
+        <div className="form-element">
+            <label>Test name: </label>
+            <input type="text" {...register("testName")} />
+        </div>
+        <div className="form-element">
+            <label>*Date: </label>
+            <input type="date" {...register("testDate", {required:true})} />
+        </div>
+        <div className="form-element">
+            <label>*Number of questions: </label>
+            <input type="number" {...register("testNumQs", {required:true})} />
+        </div>
+        <div className="form-element">
+            <label>*Your score (%): </label>
+            <input type="number" placeholder="Percent correct" {...register("testScore", {required:true})} />
+        </div>
+        <div className="form-element">
+            <label>*Average score (%): </label>
+            <input type="number" placeholder="Percent correct" {...register("testAvgScore", {required:true})} />
+        </div>
+        <div className="form-element">
+            <label>Your time (minutes): </label>
+            <input type="number" {...register("testTime")} />
+        </div>
 
-        setState({test:{[name]:value}})
+        <input type="submit" value="Submit" />
         
-    }
-    
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        /*
-        setState({submittedDate:new Date().toISOString()}, 
-            () => {
-                console.log(state);
-
-                fetch('/api/v1/tests/'+state.tid, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                      },
-                    body: JSON.stringify(state)})
-                .then((response) => response.text())
-                .then((responseText) => console.log(responseText))
-                .catch((error) => console.error(error));
-            });
-            */
-    }
-    
-    setState({handleInputChange:handleInputChange})
-    
-    return (
-        <div className="test-entry">
-            <h2>New Test</h2>
-            <TestForm test={state.test} />
-        </div>
+        
+    </form>
     )
 }
 
-const TestForm = (props) => {
-    props = props.test;
-    
 
-    return (
-        <div>hi</div>
-    )
+
+const FormExample = () => {
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+  const onSubmit = data => console.log(data);
+
+  setValue("exampleRequired", "fuck")
+
+  return (
+    /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
+    <form onSubmit={handleSubmit(onSubmit)}>
+      {/* register your input into the hook by invoking the "register" function */}
+      <input defaultValue="test" {...register("example")} />
+      
+      {/* include validation with required or other standard HTML validation rules */}
+      <input {...register("exampleRequired", { required: true })} />
+      {/* errors will return when field validation fails  */}
+      {errors.exampleRequired && <span>This field is required</span>}
+      
+      <input type="submit" />
+    </form>
+  );
 }
 
-class QuestionEntry extends React.Component {
-    
-    render() {
-        return (
-        <div class="form-element text-entry-question">
-            <hr />
-            <h3>{"Q"+this.props.qid}</h3>
-
-            <div class="form-element">
-                <label>Correct? </label>
-                <input type="checkbox"></input>
-            </div>
-            <div class="form-element">
-                <label>% correct: </label>
-                <input type="number"></input>
-            </div>
-            <div class="form-element">
-                <label>Time spent (seconds): </label>
-                <input type="number"></input>
-            </div>
-            <div class="form-element">
-                <label>ID: </label>
-                <input type="text"></input>
-            </div>
-            <div class="form-element">
-                <label>Subject: </label>
-                <input type="text"></input>
-            </div>
-            <div class="form-element">
-                <label>Systems: </label>
-                <input type="text"></input>
-            </div>
-            <div class="form-element">
-                <label>Categories: </label>
-                <input type="text"></input>
-            </div>
-            <div class="form-element">
-                <label>Topics: </label>
-                <input type="text"></input>
-            </div>
-        </div>
-        )
-    }
-}
-
-export default Test;
+export default Test
