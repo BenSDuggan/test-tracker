@@ -7,23 +7,26 @@
 import { Routes, Route, Link } from "react-router-dom";
 import React from 'react';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
 
 const Header = () => {
 
 
     return (
-        <div>
-            <li>
-                <Link to="/">Home</Link>
-            </li>
-            <li>
-                <Link to="/tests">Tests</Link>
-            </li>
-            <li>
-                <Link to="/tests/new">+ test</Link>
-            </li>
-        </div>
+        <Navbar bg="primary" variant="dark">
+            <Container>
+                <Link to="/"><Navbar.Brand>Test Tracker</Navbar.Brand></Link>
+            <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="me-auto">
+                    <Nav.Link as={Link} to="/dashboard" >Dashboard</Nav.Link>
+                    <Nav.Link as={Link} to="/tests" >Tests</Nav.Link>
+                    <Nav.Link as={Link} to="/tests/new" >+ Test</Nav.Link>
+                </Nav>
+            </Navbar.Collapse>
+            </Container>
+        </Navbar>
     )
 }
 

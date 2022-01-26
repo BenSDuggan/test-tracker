@@ -6,11 +6,13 @@
 import { Routes, Route, Link } from "react-router-dom";
 import React from 'react';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './components/Header';
 import Tests from './components/Tests';
 import Test from './components/Test';
 import { useParams } from "react-router-dom";
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Container from 'react-bootstrap/Container';
 
 
 const App = () => {
@@ -20,11 +22,13 @@ const App = () => {
         <div className="App">
             <Header />
             
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="tests" element={<Tests />} />
-                <Route path="tests/:tid" element={<Test />} />
-            </Routes>
+            <Container>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="tests" element={<Tests />} />
+                    <Route path="tests/:tid" element={<Test />} />
+                </Routes>
+            </Container>
         </div>
     )
 }
