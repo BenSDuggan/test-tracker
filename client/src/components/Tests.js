@@ -3,11 +3,10 @@
  * 2022/01/23
  */
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { v4 as uuidv4 } from 'uuid';
 import React, {useState, useEffect} from 'react';
-import { Link, Outlet } from 'react-router-dom';
-const ENDPOINT = "http://127.0.0.1:3001";
+import { Link } from 'react-router-dom';
+
+import Container from 'react-bootstrap/Container';
 
 
 const Tests = () => {
@@ -34,9 +33,9 @@ const Tests = () => {
     }, []);
 
     return (
-        <div className="table table-striped">
+        <Container>
             <h2>Tests:</h2>
-            <table>
+            <table className="table table-striped">
             <thead>
             <tr>
                 <th>Name</th><th>Date</th><th>Score (%)</th><th>Average score (%)</th><th># questions</th><th>Time (min)</th>
@@ -57,7 +56,7 @@ const Tests = () => {
             })}
             </tbody>
         </table>
-        </div>
+        </Container>
     )
 }
 

@@ -3,12 +3,12 @@
  * 2022/01/23
  */
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { v4 as uuidv4 } from 'uuid';
 import React, {useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-const ENDPOINT = "http://127.0.0.1:3001";
+
+import { v4 as uuidv4 } from 'uuid';
+import Container from 'react-bootstrap/Container';
 
 
 const Test = () => {
@@ -35,7 +35,7 @@ const Test = () => {
     let params = useParams();
 
     useEffect(() => {
-        if(params.tid == "new") {
+        if(params.tid === "new") {
 
         }
         else {
@@ -47,10 +47,10 @@ const Test = () => {
     }, [])
 
     return (
-    <div className="test-entry">
+    <Container className="test-entry">
         <h2>New Test</h2>
-        <TestForm data={state.test}/>
-    </div>
+        <Container><TestForm data={state.test}/></Container>
+    </Container>
     )
 }
 
@@ -78,33 +78,40 @@ const TestForm = (test) => {
 
     return (
     <form onSubmit={handleSubmit(sendTest)}>
-        <div className="form-element">
-            <label>Test name: </label>
-            <input type="text" {...register("testName")} />
-        </div>
-        <div className="form-element">
-            <label>*Date: </label>
-            <input type="date" {...register("testDate", {required:true})} />
-        </div>
-        <div className="form-element">
-            <label>*Number of questions: </label>
-            <input type="number" {...register("testNumQs", {required:true})} />
-        </div>
-        <div className="form-element">
-            <label>*Your score (%): </label>
-            <input type="number" placeholder="Percent correct" {...register("testScore", {required:true})} />
-        </div>
-        <div className="form-element">
-            <label>*Average score (%): </label>
-            <input type="number" placeholder="Percent correct" {...register("testAvgScore", {required:true})} />
-        </div>
-        <div className="form-element">
-            <label>Your time (minutes): </label>
-            <input type="number" {...register("testTime")} />
+        <div className="form-row">
+            <div className="form-group col-md-4">
+                <label>Test name: </label>
+                <div><input type="text" {...register("testName")} /></div>
+            </div>
+            <div className="form-group col-md-4">
+                <label>*Date: </label>
+                <div><input type="date" {...register("testDate", {required:true})} /></div>
+            </div>
+            <div className="form-group col-md-4">
+                <label>Your time (minutes): </label>
+                <div><input type="number" {...register("testTime")} /></div>
+            </div>
         </div>
 
-        <input type="submit" value="Submit" />
-        
+        <div className="form-row">
+            <div className="form-group col-md-4">
+                <label>*Number of questions: </label>
+                <div><input type="number" {...register("testNumQs", {required:true})} /></div>
+            </div>
+            <div className="form-group col-md-4">
+                <label>*Your score (%): </label>
+                <div><input type="number" placeholder="Percent correct" {...register("testScore", {required:true})} /></div>
+            </div>
+            <div className="form-group col-md-4">
+                <label>*Average score (%): </label>
+                <div><input type="number" placeholder="Percent correct" {...register("testAvgScore", {required:true})} /></div>
+            </div>
+        </div>
+        <div className="form-row">
+            <div className="form-group col-md-4">
+                <input type="submit" value="Submit" />
+            </div>
+        </div>        
         
     </form>
     )
