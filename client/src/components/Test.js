@@ -64,7 +64,7 @@ const TestForm = (test) => {
         }
     }
 
-    const sub = (data) => {
+    const sendTest = (data) => {
         fetch('/api/v1/tests/'+test.tid, {
             method: 'POST',
             headers: {
@@ -77,7 +77,7 @@ const TestForm = (test) => {
     };
 
     return (
-    <form onSubmit={handleSubmit(sub)}>
+    <form onSubmit={handleSubmit(sendTest)}>
         <div className="form-element">
             <label>Test name: </label>
             <input type="text" {...register("testName")} />
