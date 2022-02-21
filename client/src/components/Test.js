@@ -30,11 +30,12 @@ const Test = () => {
         testTime: 0,
     }
 
-    const [state, setState] = useState({hi:"fail", test:test});
+    const [state, setState] = useState({paramTID:null, test:test});
 
     let params = useParams();
 
     useEffect(() => {
+        setState({paramTID:params.tid})
         if(params.tid === "new") {
 
         }
@@ -46,9 +47,10 @@ const Test = () => {
         }
     }, [])
 
+    //+state.test.testName?state.test.testName:""
     return (
     <Container className="test-entry">
-        <h2>New Test</h2>
+        <h2>{state.paramTID == "new" ? "New test" : "Update test: "}</h2>
         <Container><TestForm data={state.test}/></Container>
     </Container>
     )
